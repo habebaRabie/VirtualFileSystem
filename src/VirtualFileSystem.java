@@ -20,13 +20,22 @@ public class VirtualFileSystem {
             System.out.println("1 - Contiguous Allocation");
             System.out.println("2 - Indexed Allocation");
             System.out.println("3- Linked Allocation");
+            System.out.println("4 - Exit");
             methodChoice = input.nextInt();
-            if(methodChoice == 1){
+            if(methodChoice == 1){ //Best Fit allocation
+
                 //Contiguous Allocation
+                //This method keeps the free/busy list in order by size –
+                // smallest to largest. In this method,
+                //the operating system first searches the whole of the memory according to the size of the given job and
+                // allocates it to the closest-fitting free partition in the memory
+
             }else if(methodChoice == 2){
                 //Indexed Allocation
             }else if(methodChoice == 3){
                 //Linked Allocation
+            }else if(methodChoice == 4){
+                break;
             }else {
                 System.out.println("Wrong choice!");
             }
