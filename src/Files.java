@@ -1,4 +1,4 @@
-public class File {
+public class Files {
     private String filePath;
     private int[] allocatedBlocks;
     private boolean deleted;

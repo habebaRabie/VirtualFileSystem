@@ -1,8 +1,9 @@
 import java.util.ArrayList;
 
 public class Directory {
+    private String name;
     private String directoryPath;
-    private ArrayList <File> files = new ArrayList<>();
+    private ArrayList <Files> files = new ArrayList<>();
     private ArrayList<Directory> subDirectories = new ArrayList<>();
     private boolean deleted;
 
@@ -14,11 +15,11 @@ public class Directory {
         this.directoryPath = directoryPath;
     }
 
-    public ArrayList<File> getFiles() {
+    public ArrayList<Files> getFiles() {
         return files;
     }
 
-    public void setFiles(ArrayList<File> files) {
+    public void setFiles(ArrayList<Files> files) {
         this.files = files;
     }
 
@@ -42,7 +43,7 @@ public class Directory {
 //	this method prints the directory name and its files
 //    then makes recursion to loop on the subDirectories to print their structure too.
 //    The level parameter can be used to print spaces before the directory name is printed to show its level in the structure
-
     }
+
 
 }
