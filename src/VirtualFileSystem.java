@@ -17,30 +17,27 @@ public class VirtualFileSystem {
         String commandIn;
         Scanner input = new Scanner(System.in);
         root.setDirectoryPath("root");
-
-
-        while(true){
+        while (true) {
             System.out.println("1 - Contiguous Allocation");
             System.out.println("2 - Indexed Allocation");
             System.out.println("3- Linked Allocation");
             System.out.println("4 - Exit");
             methodChoice = input.nextInt();
-            if(methodChoice == 1){ //Best Fit allocation
+            if (methodChoice == 1) { //Best Fit allocation
                 File fileSystem = new File("VFS.txt");
-                if(!fileSystem.exists()){
+                if (! fileSystem.exists()) {
                     fileExist = false;
                 }
-                if(!fileExist){
+                if (! fileExist) {
                     System.out.println("Enter the number of blocks");
-                    blocksNum= input.nextInt();
+                    blocksNum = input.nextInt();
                     fw = new FileWriter("VFS.txt");
-                    for(int i = 0 ; i < blocksNum ; i++){
+                    for (int i = 0; i < blocksNum; i++) {
                         fw.write("0");
                     }
                     fw.write('\n');
                     fw.close();
-                }
-                else {
+                } else {
                     FileReader file = new FileReader("VFS.txt");
                     BufferedReader buffer = new BufferedReader(file);
                     String line = buffer.readLine(), currentDircName = "";
@@ -48,44 +45,80 @@ public class VirtualFileSystem {
                     ArrayList<Directory> subDirec = new ArrayList<>();
                     ArrayList<Files> subFiles = new ArrayList<>();
 
-                    Directory currentDirectory = new Directory();
+                    Directory currentDirectory = root;
                     for (int i = 0; i < line.length(); i++) {
                         blockState.add(line.charAt(i) - '0');
                     }
+                    int previousIndentation = - 1;
                     while (true) {
+                        int indentation = 0;
+                        String tempLine = "";
                         line = buffer.readLine();
-                        if (line == "\n") {
+                        if (line.equals("EOF")) {
+                            while (currentDirectory.getParent() != null) {
+                                currentDirectory = currentDirectory.getParent();
+                            }
                             break;
                         }
-                        String[] lineTree = line.split("\\s+");
-                        for (int i = 0; i < lineTree[0].length(); i++) {
-                            if (i > 0 || i < lineTree[0].length() - 1) currentDircName += lineTree[0].charAt(i);
+                        for (int i = 0; i < line.length(); ++ i) {
+                            if (line.charAt(i) != '\t') break;
+                            indentation++;
                         }
-                        if (currentDircName.equals("root")) {
-                            currentDirectory = root;
-                            path = "root";
-                        } else {
-                            path += "/"+currentDircName;
-                            //TODO search function for directory by path
-                        }
-                        for (int i = 1; i < lineTree.length - 1; i++) {
-                            String tempDircName = "";
-                            if (lineTree[i].charAt(0) == '<') {
-                                for (int j = 0; j < lineTree[i].length(); j++) {
-                                    if (j > 0 || j < lineTree[0].length() - 1) tempDircName += lineTree[i].charAt(j);
-                                }
-                                Directory tempDirec = new Directory();
-                                tempDirec.setDirectoryPath(path + "/" + tempDircName);
-                                subDirec.add(tempDirec);
-                            } else {
-                                Files tempFile = new Files();
-                                tempFile.setFilePath(path + "/" + lineTree[i]);
-                                subFiles.add(tempFile);
+                        line = line.trim();
+                        if (line.charAt(0) == '<') {
+                            for (int j = 1; j < line.length() - 1; j++) {
+                                tempLine += line.charAt(j);
                             }
+                            line = tempLine;
+                            if (previousIndentation == - 1) {
+                                root.setName("root");
+                                root.setDirectoryPath("root");
+                                root.setParent(null);
+                                currentDirectory = root;
+                            } else {
+                                Directory tempDirectory = new Directory();
+                                if (indentation > previousIndentation) {
+                                    while (indentation - previousIndentation > 1) {
+                                        currentDirectory = currentDirectory.getParent();
+                                        previousIndentation++;
+                                    }
+                                    tempDirectory.setParent(currentDirectory);
+                                    tempDirectory.setName(line);
+                                    tempDirectory.setDirectoryPath(currentDirectory.getDirectoryPath() + "/" + tempDirectory.getName());
+                                    tempDirectory.setParent(currentDirectory);
+                                    currentDirectory.addDirectory(tempDirectory);
+                                    currentDirectory = tempDirectory;
+                                } else if (indentation < previousIndentation) {
+                                    while (previousIndentation - indentation > 0) {
+                                        currentDirectory = currentDirectory.getParent();
+                                        previousIndentation--;
+                                    }
+                                    if (currentDirectory.getParent() != null)
+                                        currentDirectory = currentDirectory.getParent();
+                                    tempDirectory.setParent(currentDirectory);
+                                    tempDirectory.setName(line);
+                                    tempDirectory.setDirectoryPath(currentDirectory.getDirectoryPath() + "/" + tempDirectory.getName());
+                                    tempDirectory.setParent(currentDirectory);
+                                    currentDirectory.addDirectory(tempDirectory);
+                                    currentDirectory = tempDirectory;
+                                } else {
+                                    tempDirectory.setName(line);
+                                    tempDirectory.setDirectoryPath(currentDirectory.getDirectoryPath() + "/" + tempDirectory.getName());
+                                    tempDirectory.setParent(currentDirectory);
+                                    currentDirectory.addDirectory(tempDirectory);
+                                    currentDirectory = tempDirectory;
+                                }
+                            }
+                        } else {
+                            Files tempFile = new Files();
+                            tempFile.setFileName(line);
+                            tempFile.setParent(currentDirectory);
+                            tempFile.setPath(currentDirectory.getDirectoryPath() + "/" + tempFile.getFileName());
+                            currentDirectory.addFile(tempFile);
                         }
-                        currentDirectory.setSubDirectories(subDirec);
-                        currentDirectory.setFiles(subFiles);
+                        previousIndentation = indentation;
                     }
+                    root = currentDirectory;
                     fw = new FileWriter("VFS.txt", true);
                     BufferedWriter bw = new BufferedWriter(fw);
                     commandIn = input.nextLine();
@@ -100,13 +133,13 @@ public class VirtualFileSystem {
                     //the operating system first searches the whole of the memory according to the size of the given job and
                     // allocates it to the closest-fitting free partition in the memory
                 }
-            }else if(methodChoice == 2){
+            } else if (methodChoice == 2) {
                 //Indexed Allocation
-            }else if(methodChoice == 3){
+            } else if (methodChoice == 3) {
                 //Linked Allocation
-            }else if(methodChoice == 4){
+            } else if (methodChoice == 4) {
                 break;
-            }else {
+            } else {
                 System.out.println("Wrong choice!");
             }
 

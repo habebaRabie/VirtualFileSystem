@@ -1,14 +1,32 @@
 public class Files {
-    private String filePath;
+    private String fileName;
+    private Directory parent;
+    private String path;
     private int[] allocatedBlocks;
     private boolean deleted;
 
-    public String getFilePath() {
-        return filePath;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setFileName(String filePath) {
+        this.fileName = filePath;
+    }
+
+    public void setParent(Directory dic) {
+        this.parent = dic;
+    }
+
+    public Directory getParent() {
+        return this.parent;
+    }
+
+    public String getPath() {
+        return this.path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public int[] getAllocatedBlocks() {

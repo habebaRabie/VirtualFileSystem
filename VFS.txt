@@ -1,2 +1,19 @@
-<root> File0.txt <folder1>
-<folder1> File1.txt <folder2>
+0000000000000000000000000000000000000000000000000000000000
+<root>
+	file1
+	file2
+	file3
+	<Folder1>
+		file4
+		<folder2>
+	<folder3>
+		adsasdasd
+		<folder4>
+			file5
+			<folder5>
+				adsasdasd
+				<folder6>
+					file6
+	<folder7>
+	    adsasdasd23
+EOF
