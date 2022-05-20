@@ -15,31 +15,6 @@ public class ContiguousAllocation {
         return flag;
     }
 
-//        Map<Integer, Integer> freeIndexes = new HashMap<Integer, Integer>(); //size, startIndex
-//
-//        int lastFreeIndex = -1;
-//        int size = 0;
-//        for (int i = 0; i < blockState.size(); i++) {
-//            if(blockState.get(i) == 0){
-//                size++;
-//                lastFreeIndex = i;
-//            }else{
-//                freeIndexes.put(size, lastFreeIndex-size);
-//                size= 0;
-//                lastFreeIndex = -1;
-//            }
-//        }
-//
-//        int startIndex;
-//
-//        for(int i=0; i< blockState.size(); i++){
-//            if(freeIndexes.containsKey(fileSize+i)){
-//                startIndex = freeIndexes.get(fileSize+i);
-//                return startIndex; //return the start index
-//            }
-//        }
-//        return -1; //no valid space
-//    }
 
     public ArrayList<Integer> getAllocatedIndex(int fileSize, int startBlockNum, ArrayList<Integer> blockState) { //0011001
         if(searchForEmptyBlocks(fileSize, startBlockNum, blockState)){
@@ -68,3 +43,28 @@ public class ContiguousAllocation {
     }
 
 }
+//        Map<Integer, Integer> freeIndexes = new HashMap<Integer, Integer>(); //size, startIndex
+//
+//        int lastFreeIndex = -1;
+//        int size = 0;
+//        for (int i = 0; i < blockState.size(); i++) {
+//            if(blockState.get(i) == 0){
+//                size++;
+//                lastFreeIndex = i;
+//            }else{
+//                freeIndexes.put(size, lastFreeIndex-size);
+//                size= 0;
+//                lastFreeIndex = -1;
+//            }
+//        }
+//
+//        int startIndex;
+//
+//        for(int i=0; i< blockState.size(); i++){
+//            if(freeIndexes.containsKey(fileSize+i)){
+//                startIndex = freeIndexes.get(fileSize+i);
+//                return startIndex; //return the start index
+//            }
+//        }
+//        return -1; //no valid space
+//    }
