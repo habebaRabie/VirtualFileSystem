@@ -11,8 +11,8 @@ public class linkedAllocation {
                 array[i] = 1;
                 size++;
             }
-            int count = 0;
             if (size == fileSize) {
+                int count = 0;
                 while (count < fileSize) {
                     if (array[i - count] != 1) {
                         size = 0;
@@ -28,7 +28,7 @@ public class linkedAllocation {
                     }
                 }
             }
-            if (linked == true) {
+            if (linked) {
                 return array;
             }
         }

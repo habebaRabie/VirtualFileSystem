@@ -3,17 +3,27 @@ import java.util.ArrayList;
 
 public class IndexedAllocation {
 
-    public int[] allocateBlocks(int fileSize, ArrayList<Integer> stateOfBlocks){
-
-        int [] arr = new int[fileSize];
-        int fileCheck = 0;
-        for(int i=0; i< stateOfBlocks.size(); i++){
-            if(stateOfBlocks.get(i) == 0 && fileCheck<=fileSize) {
-                arr[i] = 1; //save index
-                fileCheck++;
+    public boolean searchForEmptyBlocks(ArrayList<Integer> fileBlocksNum, ArrayList<Integer> blockState) {
+        boolean flag = false;
+        for(int i=0; i< fileBlocksNum.size(); i++){
+            if(blockState.get(i) == 0){
+                flag = true;
+            }else{
+                return false;
             }
         }
-        return arr;
+        return flag;
+    }
+                                                //7 1 2 3 4
+    public ArrayList<Integer> getAllocatedIndex(int index, ArrayList<Integer> fileBlocksNum  ,ArrayList<Integer> blockState) {
+        if(blockState.get(index) == 0 && searchForEmptyBlocks(fileBlocksNum, blockState)){
+            blockState.set(fileBlocksNum.get(index), 1);
+            for(int i=0; i< fileBlocksNum.size(); i++){
+                blockState.set(fileBlocksNum.get(i), 1);
+            }
+        }
+
+        return blockState;
     }
 
     public String getAllPaths(String currentPath ,Directory d){
