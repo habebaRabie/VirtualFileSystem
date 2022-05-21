@@ -1,6 +1,7 @@
 import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class VirtualFileSystem {
@@ -16,6 +17,7 @@ public class VirtualFileSystem {
         int methodChoice;
         String commandIn;
         Scanner input = new Scanner(System.in);
+        Scanner commandName = new Scanner(System.in);
         root.setDirectoryPath("root");
         File fileSystem = new File("VFS.txt");
         if (! fileSystem.exists()) {
@@ -118,14 +120,43 @@ public class VirtualFileSystem {
                 System.out.println("3 - Linked Allocation");
                 System.out.println("4 - Exit");
                 methodChoice = input.nextInt();
+
                 if (methodChoice == 1) { //Best Fit allocation
                     fw = new FileWriter("VFS.txt", true);
                     BufferedWriter bw = new BufferedWriter(fw);
-                    commandIn = input.nextLine();
-                    //System.out.println(root);
+                    commandIn = commandName.nextLine();
                     String[] commandSplited = commandIn.split("\\s+");
-                    if (commandSplited[0].equals("CreateFile ")) {
+                    String[] directory;
+//                    System.out.println(Arrays.toString(commandSplited));
+                    if (commandSplited[0].equals("CreateFile")) {
+                        directory = commandSplited[1].split("/");
+//                        System.out.println(Arrays.toString(directory));
+//                        for(int i=0; i< directory.length; i++){
+//                            if(directory[1].contains(".")){//file in the root not subFolder
+//                                root.setFiles();
+//                            }
+//                        }
+                    } else if(commandSplited[0].equals("CreateFolder")){ //
+                        directory = commandSplited[1].split("/");
+                        Directory currentRoot = root;
+                        ArrayList <Directory> subDirectory = new ArrayList<>();
+                        for(int i=1; i< directory.length; i++){
+                            subDirectory = currentRoot.getSubDirectories();
+                            if(!subDirectory.contains(directory[i])){
+                                Directory d1 = new Directory();
+                                d1.setName(directory[i]);
+                                d1.setParent(currentRoot);
+                               // currentRoot.setDirectoryPath();
+                            }else{
+                                for(int j=0; j< subDirectory.size(); j++){
+                                    if(subDirectory.get(j).getName().equals(directory[i])){
+                                        currentRoot = subDirectory.get(j);
+                                    }
+                                }
+                            }
 
+                        }
+                        System.out.println(currentRoot);
                     }
 
                     //Contiguous Allocation

@@ -16,7 +16,8 @@ public class ContiguousAllocation {
     }
 
 
-    public ArrayList<Integer> getAllocatedIndex(int fileSize, int startBlockNum, ArrayList<Integer> blockState) { //0011001
+    public ArrayList<Integer> getAllocatedIndex(int fileSize, int startBlockNum, ArrayList<Integer> blockState) {
+
         if(searchForEmptyBlocks(fileSize, startBlockNum, blockState)){
             for (int i = startBlockNum; i < fileSize; i++) {
                 blockState.set(i, 1);
