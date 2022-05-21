@@ -122,6 +122,7 @@ public class VirtualFileSystem {
                     fw = new FileWriter("VFS.txt", true);
                     BufferedWriter bw = new BufferedWriter(fw);
                     commandIn = input.nextLine();
+                    //System.out.println(root);
                     String[] commandSplited = commandIn.split("\\s+");
                     if (commandSplited[0].equals("CreateFile ")) {
 
