@@ -63,10 +63,25 @@ public class Directory {
         this.deleted = deleted;
     }
 
-    public void printDirectoryStructure(int level) {
-//	this method prints the directory name and its files
-//    then makes recursion to loop on the subDirectories to print their structure too.
-//    The level parameter can be used to print spaces before the directory name is printed to show its level in the structure
+    public Boolean printDirectoryStructure() {
+        System.out.println("<"+this.name+">");
+        if(this.subDirectories.size() == 0){
+            return true;
+        }else{
+            ArrayList <Files> f = this.getFiles();
+            for (Files file:f){
+                String[] splited =file.getPath().split("/");
+                for(int i = 0 ; i < splited.length-1 ;++i) System.out.print("\t");
+                System.out.println(file.getFileName());
+            }
+            ArrayList <Directory > d = this.getSubDirectories();
+            for(Directory dir:d){
+                String[] splited =dir.getDirectoryPath().split("/");
+                for(int i = 0 ; i < splited.length-1 ;++i) System.out.print("\t");
+                dir.printDirectoryStructure();
+            }
+        }
+        return false;
     }
 
 
