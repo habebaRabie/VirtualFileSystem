@@ -1,42 +1,107 @@
+import org.w3c.dom.Node;
+
+import java.io.File;
+import java.nio.file.DirectoryStream;
 import java.util.ArrayList;
 
-public class linkedAllocation {
+public class linkedAllocation implements Allocation{
+    char allocationName = 'l';
 
-    public boolean searchForEmptyBlocks(ArrayList<Integer> intermediatePointers, ArrayList<Integer> blockState) {
-        boolean flag = false;
-        for(int i=0; i< intermediatePointers.size(); i++){
-            if(blockState.get(i) == 0){
-                flag = true;
-            }else{
-                return false;
-            }
-        }
-        return flag;
-    }
 
     public ArrayList<Integer> getAllocatedIndex(int start, int end, ArrayList<Integer> intermediatePointers , ArrayList<Integer> blockState) {
-        if(blockState.get(start) == 0 && blockState.get(end) == 0 && searchForEmptyBlocks(intermediatePointers, blockState)){
-            for(int i=0; i< intermediatePointers.size(); i++){
-                blockState.set(intermediatePointers.get(i), 1);
-            }
+        for(int i=0; i< intermediatePointers.size(); i++){
+            blockState.set(intermediatePointers.get(i), 1);
         }
         return blockState;
     }
 
-    public ArrayList<Integer> deleteAllocatedIndex(int start, int end, ArrayList<Integer> intermediatePointers , ArrayList<Integer> blockState) {
+    public ArrayList<Integer> deleteAllocatedIndex(int [] myAllocatedBlocks , ArrayList<Integer> blockState) {
 
-        if(blockState.get(start) == 1 && blockState.get(end) == 1 && !searchForEmptyBlocks(intermediatePointers, blockState)){
-            blockState.set(start,0);
-            blockState.set(end,0);
-            for(int i=0; i< intermediatePointers.size(); i++){
-                blockState.set(intermediatePointers.get(i), 0);
-            }
-            System.out.println("File deleted successfully");
-        }
-        else{
-            System.out.println( "File not exist");
-        }
+       for(int i=0 ; i< blockState.size();i++){
+           if(myAllocatedBlocks[i]==1){
+               myAllocatedBlocks[i]=0;
+               blockState.set(i, 0);
+           }
+       }
         return blockState;
+    }
+
+    @Override
+    public boolean createFile(DiskStructureManger dsm, String[] path, int size) {
+        ArrayList<Directory> sub = new ArrayList<>();
+        Directory current= dsm.getRoot();
+        ArrayList <Files> file = new ArrayList<>();
+        ArrayList<Integer> blockState = new ArrayList<>();
+        for(int i=1 ; i<path.length-1;i++){
+            sub = current.getSubDirectories();
+            for(int j=0 ; j< sub.size(); j++){
+                if(sub.get(j).getName().equals(path[i])){
+                    current = sub.get(i);
+                    break;
+                }
+                if(j+1>=sub.size()){
+                    return false;
+                }
+            }
+        }
+        file = current.getFiles();
+        for(Files f: file){
+            if(f.getFileName().equals(path[path.length-1]))return false;
+        }
+        int numberOfBlocks =0 , start = 0, end = 0;
+        ArrayList<Integer> pointers = new ArrayList<>();
+        boolean foundBlocks = false;
+
+        for(int i=0; i< blockState.size(); i++){
+            if(blockState.get(i) == 0){ //empty
+                pointers.add(i);
+                numberOfBlocks++;
+            }
+            if(numberOfBlocks == size){
+                start = pointers.get(0);
+                pointers.remove(0);
+                end = pointers.get(pointers.size()-1);
+                pointers.remove(pointers.size()-1);
+                foundBlocks = true;
+            }
+        }
+        if(!foundBlocks){
+            return false;
+        }
+        Files newFile = new Files();
+        newFile.setFileName(path[path.length-1]);
+        newFile.setParent(current);
+        String newFilePath="";
+        for(int i = 0; i< path.length;i++){
+            newFilePath +=path[i];
+        }
+        newFile.setPath(newFilePath);
+
+        blockState = getAllocatedIndex(start,end,pointers,blockState);
+        int[] allocatedBlocks = new int[blockState.size()];
+        for(int i=0; i<blockState.size();i++){
+            allocatedBlocks[i] = blockState.get(i);
+        }
+        newFile.setAllocatedBlocks(allocatedBlocks);
+        newFile.setAllocationAlgorithm('l');
+        dsm.setBlockState(blockState);
+
+        return true;
+    }
+
+    @Override
+    public boolean searchForEmptyBlocks(int fileSize, int startBlockNum, ArrayList<Integer> blockState) {
+        return false;
+    }
+
+    @Override
+    public ArrayList<Integer> getAllocatedIndex(int fileSize, int startBlockNum, ArrayList<Integer> blockState) {
+        return null;
+    }
+
+    @Override
+    public char getAllocationTec() {
+        return allocationName;
     }
 }
 

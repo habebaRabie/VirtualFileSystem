@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 
-public class IndexedAllocation {
+public class IndexedAllocation implements Allocation {
 
     public boolean searchForEmptyBlocks(ArrayList<Integer> fileBlocksNum, ArrayList<Integer> blockState) {
         boolean flag = false;
@@ -40,6 +40,31 @@ public class IndexedAllocation {
             System.out.println( "File not exist");
         }
         return blockState;
+    }
+
+    @Override
+    public boolean createFile(DiskStructureManger dsm, String[] path, int size) {
+        return false;
+    }
+
+    @Override
+    public boolean searchForEmptyBlocks(int fileSize, int startBlockNum, ArrayList<Integer> blockState) {
+        return false;
+    }
+
+    @Override
+    public ArrayList<Integer> getAllocatedIndex(int fileSize, int startBlockNum, ArrayList<Integer> blockState) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Integer> deleteAllocatedIndex(int[] myAllocatedBlocks, ArrayList<Integer> blockState) {
+        return null;
+    }
+
+    @Override
+    public char getAllocationTec() {
+        return 0;
     }
 
 //    public String getAllPaths(String currentPath ,Directory d){

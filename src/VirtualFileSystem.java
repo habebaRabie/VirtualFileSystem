@@ -6,11 +6,11 @@ import java.util.Scanner;
 
 public class VirtualFileSystem {
 
-    static int blocksNum = 0;
-    static int blockSize = 1;
-    static boolean fileExist = true;
+    //    static int blocksNum = 0;
+//    static int blockSize = 1;
+//    static boolean fileExist = true;
     static FileWriter fw;
-    static Directory root = new Directory();
+    //    static Directory root = new Directory();
     static ArrayList<Integer> blockState = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
@@ -18,166 +18,84 @@ public class VirtualFileSystem {
         String commandIn;
         Scanner input = new Scanner(System.in);
         Scanner commandName = new Scanner(System.in);
-        root.setDirectoryPath("root");
-        File fileSystem = new File("VFS.txt");
-        if (! fileSystem.exists()) {
-            fileExist = false;
-        }
-        if (! fileExist) {
-            System.out.println("Enter the number of blocks");
-            blocksNum = input.nextInt();
-            fw = new FileWriter("VFS.txt");
-            for (int i = 0; i < blocksNum; i++) {
-                fw.write("0");
-            }
-            fw.write('\n');
-            fw.close();
-        } else {
-            FileReader file = new FileReader("VFS.txt");
-            BufferedReader buffer = new BufferedReader(file);
-            String line = buffer.readLine(), currentDircName = "";
-            String path = "";
-            ArrayList<Directory> subDirec = new ArrayList<>();
-            ArrayList<Files> subFiles = new ArrayList<>();
+//        root.setDirectoryPath("root");
+        DiskStructureManger dsm = new DiskStructureManger();
+//        if (dsm.getFileExist())
+//            root = dsm.getRoot();
+        Allocation all;
+        String[] s = {"root", "Folder1", "file3"};
+//        c.createFile(dsm, s, 20);
+        while (true) {
+            System.out.println("1 - Contiguous Allocation");
+            System.out.println("2 - Indexed Allocation");
+            System.out.println("3 - Linked Allocation");
+            System.out.println("4 - Exit");
+            methodChoice = input.nextInt();
 
-            Directory currentDirectory = root;
-            for (int i = 0; i < line.length(); i++) {
-                blockState.add(line.charAt(i) - '0');
-            }
-            int previousIndentation = - 1;
-            while (true) {
-                int indentation = 0;
-                String tempLine = "";
-                line = buffer.readLine();
-                if (line.equals("EOF")) { //TODO Change this condition
-                    while (currentDirectory.getParent() != null) {
-                        currentDirectory = currentDirectory.getParent();
-                    }
-                    break;
-                }
-                for (int i = 0; i < line.length(); ++ i) {
-                    if (line.charAt(i) != '\t') break;
-                    indentation++;
-                }
-                line = line.trim();
-                if (line.charAt(0) == '<') {
-                    for (int j = 1; j < line.length() - 1; j++) {
-                        tempLine += line.charAt(j);
-                    }
-                    line = tempLine;
-                    if (previousIndentation == - 1) {
-                        root.setName("root");
-                        root.setDirectoryPath("root");
-                        root.setParent(null);
-                        currentDirectory = root;
-                    } else {
-                        Directory tempDirectory = new Directory();
-                        if (indentation > previousIndentation) {
-                            while (indentation - previousIndentation > 1) {
-                                currentDirectory = currentDirectory.getParent();
-                                previousIndentation++;
-                            }
-                            tempDirectory.setParent(currentDirectory);
-                            tempDirectory.setName(line);
-                            tempDirectory.setDirectoryPath(currentDirectory.getDirectoryPath() + "/" + tempDirectory.getName());
-                            tempDirectory.setParent(currentDirectory);
-                            currentDirectory.addDirectory(tempDirectory);
-                            currentDirectory = tempDirectory;
-                        } else if (indentation < previousIndentation) {
-                            while (previousIndentation - indentation > 0) {
-                                currentDirectory = currentDirectory.getParent();
-                                previousIndentation--;
-                            }
-                            if (currentDirectory.getParent() != null)
-                                currentDirectory = currentDirectory.getParent();
-                            tempDirectory.setParent(currentDirectory);
-                            tempDirectory.setName(line);
-                            tempDirectory.setDirectoryPath(currentDirectory.getDirectoryPath() + "/" + tempDirectory.getName());
-                            tempDirectory.setParent(currentDirectory);
-                            currentDirectory.addDirectory(tempDirectory);
-                            currentDirectory = tempDirectory;
-                        } else {
-                            tempDirectory.setName(line);
-                            tempDirectory.setDirectoryPath(currentDirectory.getDirectoryPath() + "/" + tempDirectory.getName());
-                            tempDirectory.setParent(currentDirectory);
-                            currentDirectory.addDirectory(tempDirectory);
-                            currentDirectory = tempDirectory;
-                        }
-                    }
-                } else {
-                    Files tempFile = new Files();
-                    tempFile.setFileName(line);
-                    tempFile.setParent(currentDirectory);
-                    tempFile.setPath(currentDirectory.getDirectoryPath() + "/" + tempFile.getFileName());
-                    currentDirectory.addFile(tempFile);
-                }
-                previousIndentation = indentation;
-            }
-            root = currentDirectory;
-            while (true) {
-                System.out.println("1 - Contiguous Allocation");
-                System.out.println("2 - Indexed Allocation");
-                System.out.println("3 - Linked Allocation");
-                System.out.println("4 - Exit");
-                methodChoice = input.nextInt();
-
-                if (methodChoice == 1) { //Best Fit allocation
-                    fw = new FileWriter("VFS.txt", true);
-                    BufferedWriter bw = new BufferedWriter(fw);
-                    commandIn = commandName.nextLine();
-                    String[] commandSplited = commandIn.split("\\s+");
-                    String[] directory;
+            if (methodChoice == 1) { //Best Fit allocation
+                all = new ContiguousAllocation();
+                fw = new FileWriter("VFS.txt", true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                commandIn = commandName.nextLine();
+                String[] commandSplited = commandIn.split("\\s+");
+                String[] directory;
 //                    System.out.println(Arrays.toString(commandSplited));
-                    if (commandSplited[0].equals("CreateFile")) {
-                        directory = commandSplited[1].split("/");
-//                        System.out.println(Arrays.toString(directory));
-//                        for(int i=0; i< directory.length; i++){
-//                            if(directory[1].contains(".")){//file in the root not subFolder
-//                                root.setFiles();
+                if (commandSplited[0].equals("CreateFile")) {
+                    directory = commandSplited[1].split("/");
+                    all.createFile(dsm, directory, Integer.parseInt(commandSplited[3]));
+                } else if (commandSplited[0].equals("DeleteFile")) { //
+                    directory = commandSplited[1].split("/");
+                    dsm.deleteFile(directory, all);
+                } else if (commandSplited[0].equals("CreateFolder")) { //
+                    directory = commandSplited[1].split("/");
+                    dsm.creatDirectory(directory);
+//                    Directory currentRoot = dsm.getRoot();
+//                    ArrayList<Directory> subDirectory = new ArrayList<>();
+//                    for (int i = 1; i < directory.length; i++) {
+//                        subDirectory = currentRoot.getSubDirectories();
+//                        if (! subDirectory.contains(directory[i])) {
+//                            Directory d1 = new Directory();
+//                            d1.setName(directory[i]);
+//                            d1.setParent(currentRoot);
+//                            // currentRoot.setDirectoryPath();
+//                        } else {
+//                            for (int j = 0; j < subDirectory.size(); j++) {
+//                                if (subDirectory.get(j).getName().equals(directory[i])) {
+//                                    currentRoot = subDirectory.get(j);
+//                                }
 //                            }
 //                        }
-                    } else if(commandSplited[0].equals("CreateFolder")){ //
-                        directory = commandSplited[1].split("/");
-                        Directory currentRoot = root;
-                        ArrayList <Directory> subDirectory = new ArrayList<>();
-                        for(int i=1; i< directory.length; i++){
-                            subDirectory = currentRoot.getSubDirectories();
-                            if(!subDirectory.contains(directory[i])){
-                                Directory d1 = new Directory();
-                                d1.setName(directory[i]);
-                                d1.setParent(currentRoot);
-                               // currentRoot.setDirectoryPath();
-                            }else{
-                                for(int j=0; j< subDirectory.size(); j++){
-                                    if(subDirectory.get(j).getName().equals(directory[i])){
-                                        currentRoot = subDirectory.get(j);
-                                    }
-                                }
-                            }
+//
+//                    }
+//                    System.out.println(currentRoot);
+                } else if (commandSplited[0].equals("DeleteFolder")) { //
+                    directory = commandSplited[1].split("/");
+                    dsm.deleteDirectory(directory);
+                } else if (commandSplited[0].equals("DisplayDiskStructure")) {
+                    dsm.getRoot().printDirectoryStructure();
 
-                        }
-                        System.out.println(currentRoot);
-                    }
-
-                    //Contiguous Allocation
-                    //This method keeps the free/busy list in order by size –
-                    // smallest to largest. In this method,
-                    //the operating system first searches the whole of the memory according to the size of the given job and
-                    // allocates it to the closest-fitting free partition in the memory
-
-                } else if (methodChoice == 2) {
-                    //Indexed Allocation
-                } else if (methodChoice == 3) {
-                    //Linked Allocation
-                } else if (methodChoice == 4) {
-                    break;
-                } else {
-                    System.out.println("Wrong choice!");
+                } else if (commandSplited[0].equals("DisplayDiskStatus")) {
+                    dsm.DisplayDiskStatus();
                 }
+                //Contiguous Allocation
+                //This method keeps the free/busy list in order by size –
+                // smallest to largest. In this method,
+                //the operating system first searches the whole of the memory according to the size of the given job and
+                // allocates it to the closest-fitting free partition in the memory
 
+            } else if (methodChoice == 2) {
+                //Indexed Allocation
+            } else if (methodChoice == 3) {
+                //Linked Allocation
+            } else if (methodChoice == 4) {
+                break;
+            } else {
+                System.out.println("Wrong choice!");
             }
 
         }
+
+
     }
 }
 
