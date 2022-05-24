@@ -6,6 +6,7 @@ public class Files {
     private int startIndx;
     private boolean deleted;
     private char allocationAlgorithm;
+
     public String getFileName() {
         return fileName;
     }
@@ -21,9 +22,11 @@ public class Files {
     public Directory getParent() {
         return this.parent;
     }
-    public void setAllocationAlgorithm(char c){
+
+    public void setAllocationAlgorithm(char c) {
         this.allocationAlgorithm = c;
     }
+
     public String getPath() {
         return this.path;
     }
@@ -48,10 +51,11 @@ public class Files {
         this.deleted = deleted;
     }
 
-    public char getAllocationAlgorithm(){
+    public char getAllocationAlgorithm() {
         return allocationAlgorithm;
     }
-    public void setStartIndx(int indx){
+
+    public void setStartIndx(int indx) {
         startIndx = indx;
     }
 

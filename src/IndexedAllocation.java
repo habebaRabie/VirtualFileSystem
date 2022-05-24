@@ -62,9 +62,9 @@ public class IndexedAllocation implements Allocation {
         newFile.setPath(newFilePath);
         blockState = getAllocatedIndex(pointersIndex, pointers, blockState);
         int[] allocatedBlocks = new int[size];
-        int i  = 0;
+        int i = 0;
         for (Integer P : pointers) {
-            blockState.set(P,1);
+            blockState.set(P, 1);
             allocatedBlocks[i++] = P;
         }
         newFile.setAllocatedBlocks(allocatedBlocks);

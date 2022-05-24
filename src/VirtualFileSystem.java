@@ -84,7 +84,7 @@ public class VirtualFileSystem {
 
                 } else if (commandSplited[0].equals("DisplayDiskStatus")) {
                     dsm.DisplayDiskStatus();
-                }else {
+                } else {
                     System.out.println("Wrong comand");
                 }
             } else if (methodChoice == 3) {
@@ -112,7 +112,7 @@ public class VirtualFileSystem {
 
                 } else if (commandSplited[0].equals("DisplayDiskStatus")) {
                     dsm.DisplayDiskStatus();
-                }else {
+                } else {
                     System.out.println("Wrong command");
                 }
             } else if (methodChoice == 4) {

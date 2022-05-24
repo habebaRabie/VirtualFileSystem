@@ -102,8 +102,8 @@ public class Directory {
                 }
             }
         }
-            ArrayList<Files> f = d.getFiles();
-        for (Files fs:f){
+        ArrayList<Files> f = d.getFiles();
+        for (Files fs : f) {
             if (fs.getPath().equals(path)) {
                 return fs;
             }
@@ -133,7 +133,7 @@ public class Directory {
                 for (int i = 0; i < alblocks.length; i++) {
                     System.out.print(alblocks[i] + " ");
                 }
-               System.out.println();
+                System.out.println();
             }
         }
         ArrayList<Directory> d = this.getSubDirectories();

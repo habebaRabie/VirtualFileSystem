@@ -11,7 +11,7 @@ public class DiskStructureManger {
     private Scanner input = new Scanner(System.in);
     private Scanner commandName = new Scanner(System.in);
     private FileWriter fw;
-    private Directory root,current = root;
+    private Directory root, current = root;
     private ArrayList<Integer> blockState;
 
     public DiskStructureManger() throws IOException {
@@ -112,60 +112,60 @@ public class DiskStructureManger {
             }
             this.root = currentDirectory;
             String[] lineSplit;
-            while(true){
+            while (true) {
                 line = buffer.readLine();
-                if(line.equals("")) break;
+                if (line.equals("")) break;
                 lineSplit = line.split("\\s+");
                 path = lineSplit[0];
-                if(lineSplit.length == 4){
-                    if(lineSplit[lineSplit.length-1].equals("c")){
+                if (lineSplit.length == 4) {
+                    if (lineSplit[lineSplit.length - 1].equals("c")) {
                         Files f = root.findFile(path);
-                        int start = Integer.parseInt(lineSplit[1]),end = start+Integer.parseInt(lineSplit[2]),it = start;
-                        int[] allocatedBlocks = new int [end-start];
-                        for (int i = 0; i < end-start; i++) {
-                            this.blockState.set(it,1);
-                            allocatedBlocks[i]=it++;
+                        int start = Integer.parseInt(lineSplit[1]), end = start + Integer.parseInt(lineSplit[2]), it = start;
+                        int[] allocatedBlocks = new int[end - start];
+                        for (int i = 0; i < end - start; i++) {
+                            this.blockState.set(it, 1);
+                            allocatedBlocks[i] = it++;
                         }
                         f.setStartIndx(start);
                         f.setAllocationAlgorithm('c');
                         f.setAllocatedBlocks(allocatedBlocks);
-                    }else if(lineSplit[lineSplit.length-1].equals("l")){
+                    } else if (lineSplit[lineSplit.length - 1].equals("l")) {
                         Files f = root.findFile(path);
-                        int start = Integer.parseInt(lineSplit[1]),end = Integer.parseInt(lineSplit[2]),it = start;
-                        ArrayList<Integer>all=new ArrayList<>();
-                        while(true){
-                            line=buffer.readLine();
-                            lineSplit=line.split("\\s+");
-                            if(Integer.parseInt(lineSplit[0])==end) break;
+                        int start = Integer.parseInt(lineSplit[1]), end = Integer.parseInt(lineSplit[2]), it = start;
+                        ArrayList<Integer> all = new ArrayList<>();
+                        while (true) {
+                            line = buffer.readLine();
+                            lineSplit = line.split("\\s+");
+                            if (Integer.parseInt(lineSplit[0]) == end) break;
                             all.add(Integer.parseInt(lineSplit[0]));
                         }
                         all.add(end);
-                        int[] allocatedBlocks = new int [all.size()];
-                        for(int i = 0 ; i < all.size();i++){
-                            allocatedBlocks[i]=all.get(i);
-                            blockState.set(all.get(i),1);
+                        int[] allocatedBlocks = new int[all.size()];
+                        for (int i = 0; i < all.size(); i++) {
+                            allocatedBlocks[i] = all.get(i);
+                            blockState.set(all.get(i), 1);
                         }
                         f.setStartIndx(start);
                         f.setAllocationAlgorithm('l');
                         f.setAllocatedBlocks(allocatedBlocks);
                     }
-                }else if(lineSplit.length == 3){
-                    if(lineSplit[lineSplit.length-1].equals("i")){
+                } else if (lineSplit.length == 3) {
+                    if (lineSplit[lineSplit.length - 1].equals("i")) {
                         Files f = root.findFile(path);
                         int start = Integer.parseInt(lineSplit[1]);
-                        ArrayList<Integer>all=new ArrayList<>();
+                        ArrayList<Integer> all = new ArrayList<>();
                         f.setStartIndx(start);
-                        line=buffer.readLine();
+                        line = buffer.readLine();
                         lineSplit = line.split("\\s+");
-                        blockState.set(start,1);
-                        for(int i = 1 ; i < lineSplit.length;++i){
-                            blockState.set(Integer.parseInt(lineSplit[i]),1);
+                        blockState.set(start, 1);
+                        for (int i = 1; i < lineSplit.length; ++ i) {
+                            blockState.set(Integer.parseInt(lineSplit[i]), 1);
                             all.add(Integer.parseInt(lineSplit[i]));
                         }
-                        int[] allocatedBlocks = new int [all.size()];
-                        for(int i = 0 ; i < all.size();i++){
-                            allocatedBlocks[i]=all.get(i);
-                            blockState.set(all.get(i),1);
+                        int[] allocatedBlocks = new int[all.size()];
+                        for (int i = 0; i < all.size(); i++) {
+                            allocatedBlocks[i] = all.get(i);
+                            blockState.set(all.get(i), 1);
                         }
                         f.setStartIndx(start);
                         f.setAllocationAlgorithm('i');
@@ -210,7 +210,7 @@ public class DiskStructureManger {
         }
         if (all.getAllocationTec() == 'c') {
             if (fileToDelete.getAllocationAlgorithm() == all.getAllocationTec()) {
-                this.blockState = all.deleteAllocatedIndex(fileToDelete.getAllocatedBlocks(),this.blockState);
+                this.blockState = all.deleteAllocatedIndex(fileToDelete.getAllocatedBlocks(), this.blockState);
                 Directory parent = fileToDelete.getParent();
                 f = parent.getFiles();
                 f.remove(f.indexOf(fileToDelete));
@@ -223,8 +223,8 @@ public class DiskStructureManger {
                 return false;
             }
         } else if (all.getAllocationTec() == 'l') {
-            if (fileToDelete.getAllocationAlgorithm()== all.getAllocationTec()) {
-                this.blockState = all.deleteAllocatedIndex(fileToDelete.getAllocatedBlocks(),this.blockState);
+            if (fileToDelete.getAllocationAlgorithm() == all.getAllocationTec()) {
+                this.blockState = all.deleteAllocatedIndex(fileToDelete.getAllocatedBlocks(), this.blockState);
                 Directory parent = fileToDelete.getParent();
                 f = parent.getFiles();
                 f.remove(f.indexOf(fileToDelete));
@@ -237,8 +237,8 @@ public class DiskStructureManger {
                 return false;
             }
         } else if (all.getAllocationTec() == 'i') {
-            if (fileToDelete.getAllocationAlgorithm()== all.getAllocationTec()) {
-                this.blockState = all.deleteAllocatedIndex(fileToDelete.getAllocatedBlocks(),this.blockState);
+            if (fileToDelete.getAllocationAlgorithm() == all.getAllocationTec()) {
+                this.blockState = all.deleteAllocatedIndex(fileToDelete.getAllocatedBlocks(), this.blockState);
                 Directory parent = fileToDelete.getParent();
                 f = parent.getFiles();
                 f.remove(f.indexOf(fileToDelete));
@@ -258,8 +258,8 @@ public class DiskStructureManger {
     public Boolean DisplayDiskStatus() {
         int spaceFilled = this.calculateSpace();
         int freeSpace = blockState.size() - spaceFilled;
-        System.out.println("1- Empty Space: " + freeSpace+"KB");
-        System.out.println("2- Allocated  Space: " + spaceFilled+"KB");
+        System.out.println("1- Empty Space: " + freeSpace + "KB");
+        System.out.println("2- Allocated  Space: " + spaceFilled + "KB");
         System.out.print("3- Empty Blocks in the Disk: ");
         for (int i = 0; i < blockState.size(); i++) {
             if (blockState.get(i) == 0) {
@@ -388,7 +388,7 @@ public class DiskStructureManger {
         PrintStream stream = new PrintStream(fileSystem2);
         PrintStream stdout = System.out;
         System.setOut(stream);
-        for(Integer state:blockState){
+        for (Integer state : blockState) {
             System.out.print(String.valueOf(state));
         }
         System.out.println();
