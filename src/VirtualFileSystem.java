@@ -113,7 +113,7 @@ public class VirtualFileSystem {
                 } else if (commandSplited[0].equals("DisplayDiskStatus")) {
                     dsm.DisplayDiskStatus();
                 }else {
-                    System.out.println("Wrong comand");
+                    System.out.println("Wrong command");
                 }
             } else if (methodChoice == 4) {
                 dsm.exit();
