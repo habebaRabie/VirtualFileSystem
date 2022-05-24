@@ -8,7 +8,7 @@ public class linkedAllocation implements Allocation{
     char allocationName = 'l';
 
 
-    public ArrayList<Integer> getAllocatedIndex(int start, int end, ArrayList<Integer> intermediatePointers , ArrayList<Integer> blockState) {
+    public ArrayList<Integer> getAllocatedIndex(ArrayList<Integer> intermediatePointers , ArrayList<Integer> blockState) {
         for(int i=0; i< intermediatePointers.size(); i++){
             blockState.set(intermediatePointers.get(i), 1);
         }
@@ -17,12 +17,10 @@ public class linkedAllocation implements Allocation{
 
     public ArrayList<Integer> deleteAllocatedIndex(int [] myAllocatedBlocks , ArrayList<Integer> blockState) {
 
-       for(int i=0 ; i< blockState.size();i++){
-           if(myAllocatedBlocks[i]==1){
-               myAllocatedBlocks[i]=0;
-               blockState.set(i, 0);
-           }
-       }
+        for (int i = 0; i < myAllocatedBlocks.length; i++) {
+            blockState.set(myAllocatedBlocks[i], 0);
+        }
+        System.out.println("File deleted successfully");
         return blockState;
     }
 
@@ -31,7 +29,7 @@ public class linkedAllocation implements Allocation{
         ArrayList<Directory> sub = new ArrayList<>();
         Directory current= dsm.getRoot();
         ArrayList <Files> file = new ArrayList<>();
-        ArrayList<Integer> blockState = new ArrayList<>();
+        ArrayList<Integer> blockState = dsm.getBlockState();
         for(int i=1 ; i<path.length-1;i++){
             sub = current.getSubDirectories();
             for(int j=0 ; j< sub.size(); j++){
@@ -62,11 +60,8 @@ public class linkedAllocation implements Allocation{
                 numberOfBlocks++;
             }
             if(numberOfBlocks == size){
-                start = pointers.get(0);
-                pointers.remove(0);
-                end = pointers.get(pointers.size()-1);
-                pointers.remove(pointers.size()-1);
                 foundBlocks = true;
+                break;
             }
         }
         if(!foundBlocks){
@@ -79,18 +74,21 @@ public class linkedAllocation implements Allocation{
         String newFilePath="";
         for(int i = 0; i< path.length;i++){
             newFilePath +=path[i];
+            if(i+1 < path.length) newFilePath+= "/";
         }
         newFile.setPath(newFilePath);
 
-        blockState = getAllocatedIndex(start,end,pointers,blockState);
-        int[] allocatedBlocks = new int[blockState.size()];
-        for(int i=0; i<blockState.size();i++){
-            allocatedBlocks[i] = blockState.get(i);
+        blockState = getAllocatedIndex(pointers,blockState);
+        int[] allocatedBlocks = new int[size];
+        int i  = 0;
+        for (Integer P : pointers) {
+            blockState.set(P,1);
+            allocatedBlocks[i++] = P;
         }
         newFile.setAllocatedBlocks(allocatedBlocks);
         newFile.setAllocationAlgorithm('l');
+        current.addFile(newFile);
         dsm.setBlockState(blockState);
-
         return true;
     }
 
