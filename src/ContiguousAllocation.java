@@ -43,6 +43,7 @@ public class ContiguousAllocation implements Allocation {
             if (blockCount == size) {
                 start = (i + 1) - size;
                 foundBlocks = true;
+                break;
             } else if (blockState.get(i) == 1) blockCount = 0;
         }
         if (! foundBlocks) {
@@ -65,6 +66,7 @@ public class ContiguousAllocation implements Allocation {
         }
         newFile.setAllocatedBlocks(allocatedBlocks);
         newFile.setAllocationAlgorithm('c');
+        current.addFile(newFile);
         dsm.setBlockState(blockState);
         return true;
     }

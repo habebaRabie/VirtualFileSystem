@@ -42,7 +42,7 @@ public class VirtualFileSystem {
 //                    System.out.println(Arrays.toString(commandSplited));
                 if (commandSplited[0].equals("CreateFile")) {
                     directory = commandSplited[1].split("/");
-                    all.createFile(dsm, directory, Integer.parseInt(commandSplited[3]));
+                    all.createFile(dsm, directory, Integer.parseInt(commandSplited[2]));
                 } else if (commandSplited[0].equals("DeleteFile")) { //
                     directory = commandSplited[1].split("/");
                     dsm.deleteFile(directory, all);
