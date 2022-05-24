@@ -18,13 +18,9 @@ public class VirtualFileSystem {
         String commandIn;
         Scanner input = new Scanner(System.in);
         Scanner commandName = new Scanner(System.in);
-//        root.setDirectoryPath("root");
         DiskStructureManger dsm = new DiskStructureManger();
-//        if (dsm.getFileExist())
-//            root = dsm.getRoot();
         Allocation all;
         String[] s = {"root", "Folder1", "file3"};
-//        c.createFile(dsm, s, 20);
         while (true) {
             System.out.println("1 - Contiguous Allocation");
             System.out.println("2 - Indexed Allocation");
@@ -39,7 +35,6 @@ public class VirtualFileSystem {
                 commandIn = commandName.nextLine();
                 String[] commandSplited = commandIn.split("\\s+");
                 String[] directory;
-//                    System.out.println(Arrays.toString(commandSplited));
                 if (commandSplited[0].equals("CreateFile")) {
                     directory = commandSplited[1].split("/");
                     all.createFile(dsm, directory, Integer.parseInt(commandSplited[2]));
@@ -49,25 +44,6 @@ public class VirtualFileSystem {
                 } else if (commandSplited[0].equals("CreateFolder")) { //
                     directory = commandSplited[1].split("/");
                     dsm.creatDirectory(directory);
-//                    Directory currentRoot = dsm.getRoot();
-//                    ArrayList<Directory> subDirectory = new ArrayList<>();
-//                    for (int i = 1; i < directory.length; i++) {
-//                        subDirectory = currentRoot.getSubDirectories();
-//                        if (! subDirectory.contains(directory[i])) {
-//                            Directory d1 = new Directory();
-//                            d1.setName(directory[i]);
-//                            d1.setParent(currentRoot);
-//                            // currentRoot.setDirectoryPath();
-//                        } else {
-//                            for (int j = 0; j < subDirectory.size(); j++) {
-//                                if (subDirectory.get(j).getName().equals(directory[i])) {
-//                                    currentRoot = subDirectory.get(j);
-//                                }
-//                            }
-//                        }
-//
-//                    }
-//                    System.out.println(currentRoot);
                 } else if (commandSplited[0].equals("DeleteFolder")) { //
                     directory = commandSplited[1].split("/");
                     dsm.deleteDirectory(directory);
