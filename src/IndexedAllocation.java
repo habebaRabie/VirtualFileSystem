@@ -14,7 +14,7 @@ public class IndexedAllocation implements Allocation {
             sub = current.getSubDirectories();
             for (int j = 0; j < sub.size(); j++) {
                 if (sub.get(j).getName().equals(path[i])) {
-                    current = sub.get(i);
+                    current = sub.get(j);
                     break;
                 }
                 if (j + 1 >= sub.size()) {
