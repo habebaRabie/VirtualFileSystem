@@ -175,8 +175,20 @@ public class DiskStructureManger {
                 System.out.println("Wrong Allocation Technique Used to Delete");
                 return false;
             }
-        } else {
-
+        } else if (all.getAllocationTec() == 'i') {
+            if (fileToDelete.getAllocationAlgorithm()== all.getAllocationTec()) {
+                this.blockState = all.deleteAllocatedIndex(fileToDelete.getAllocatedBlocks(),this.blockState);
+                Directory parent = fileToDelete.getParent();
+                f = parent.getFiles();
+                f.remove(f.indexOf(fileToDelete));
+                parent.setFiles(f);
+                fileToDelete.setParent(null);
+                fileToDelete.setPath(" ");
+                fileToDelete.setDeleted(true);
+            } else {
+                System.out.println("Wrong Allocation Technique Used to Delete");
+                return false;
+            }
         }
         System.out.println("File Deleted Successfully");
         return true;
