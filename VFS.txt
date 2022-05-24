@@ -16,4 +16,8 @@
 					file6
 	<folder7>
 	    adsasdasd23
+<<<<<<< HEAD
 
+=======
+EOF
+>>>>>>> 6041b49a7a032ba2c13287cf27cd5987e50740f7

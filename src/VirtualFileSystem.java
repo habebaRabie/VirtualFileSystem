@@ -61,8 +61,60 @@ public class VirtualFileSystem {
 
             } else if (methodChoice == 2) {
                 //Indexed Allocation
+                all = new IndexedAllocation();
+                fw = new FileWriter("VFS.txt", true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                commandIn = commandName.nextLine();
+                String[] commandSplited = commandIn.split("\\s+");
+                String[] directory;
+                if (commandSplited[0].equals("CreateFile")) {
+                    directory = commandSplited[1].split("/");
+                    all.createFile(dsm, directory, Integer.parseInt(commandSplited[2]));
+                } else if (commandSplited[0].equals("DeleteFile")) { //
+                    directory = commandSplited[1].split("/");
+                    dsm.deleteFile(directory, all);
+                } else if (commandSplited[0].equals("CreateFolder")) { //
+                    directory = commandSplited[1].split("/");
+                    dsm.creatDirectory(directory);
+                } else if (commandSplited[0].equals("DeleteFolder")) { //
+                    directory = commandSplited[1].split("/");
+                    dsm.deleteDirectory(directory);
+                } else if (commandSplited[0].equals("DisplayDiskStructure")) {
+                    dsm.getRoot().printDirectoryStructure();
+
+                } else if (commandSplited[0].equals("DisplayDiskStatus")) {
+                    dsm.DisplayDiskStatus();
+                }else {
+                    System.out.println("Wrong comand");
+                }
             } else if (methodChoice == 3) {
                 //Linked Allocation
+                all = new linkedAllocation();
+                fw = new FileWriter("VFS.txt", true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                commandIn = commandName.nextLine();
+                String[] commandSplited = commandIn.split("\\s+");
+                String[] directory;
+                if (commandSplited[0].equals("CreateFile")) {
+                    directory = commandSplited[1].split("/");
+                    all.createFile(dsm, directory, Integer.parseInt(commandSplited[2]));
+                } else if (commandSplited[0].equals("DeleteFile")) { //
+                    directory = commandSplited[1].split("/");
+                    dsm.deleteFile(directory, all);
+                } else if (commandSplited[0].equals("CreateFolder")) { //
+                    directory = commandSplited[1].split("/");
+                    dsm.creatDirectory(directory);
+                } else if (commandSplited[0].equals("DeleteFolder")) { //
+                    directory = commandSplited[1].split("/");
+                    dsm.deleteDirectory(directory);
+                } else if (commandSplited[0].equals("DisplayDiskStructure")) {
+                    dsm.getRoot().printDirectoryStructure();
+
+                } else if (commandSplited[0].equals("DisplayDiskStatus")) {
+                    dsm.DisplayDiskStatus();
+                }else {
+                    System.out.println("Wrong comand");
+                }
             } else if (methodChoice == 4) {
                 break;
             } else {
