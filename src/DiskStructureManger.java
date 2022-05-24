@@ -46,7 +46,7 @@ public class DiskStructureManger {
                 int indentation = 0;
                 String tempLine = "";
                 line = buffer.readLine();
-                if (line.equals("EOF")) { //TODO Change this condition
+                if (line.equals("")) { //TODO Change this condition
                     while (currentDirectory.getParent() != null) {
                         currentDirectory = currentDirectory.getParent();
                     }
