@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DiskStructureManger {
-    private File fileSystem = new File("VFS.txt");
+    private File fileSystem = new File("VFS.vfs");
     private Boolean fileExist = true;
     private int blocksNum = 0;
     private int blockSize = 1;
     private Scanner input = new Scanner(System.in);
     private Scanner commandName = new Scanner(System.in);
     private FileWriter fw;
-    private Directory root;
+    private Directory root,current = root;
     private ArrayList<Integer> blockState;
 
     public DiskStructureManger() throws IOException {
@@ -23,14 +23,14 @@ public class DiskStructureManger {
         if (! fileExist) {
             System.out.println("Enter the number of blocks");
             blocksNum = input.nextInt();
-            fw = new FileWriter("VFS.txt");
+            fw = new FileWriter("VFS.vfs");
             for (int i = 0; i < blocksNum; i++) {
                 fw.write("0");
             }
             fw.write('\n');
             fw.close();
         } else {
-            FileReader file = new FileReader("VFS.txt");
+            FileReader file = new FileReader("VFS.vfs");
             BufferedReader buffer = new BufferedReader(file);
             String line = buffer.readLine(), currentDircName = "";
             String path = "";
@@ -111,7 +111,68 @@ public class DiskStructureManger {
                 previousIndentation = indentation;
             }
             this.root = currentDirectory;
-
+            String[] lineSplit;
+            while(true){
+                line = buffer.readLine();
+                if(line.equals("")) break;
+                lineSplit = line.split("\\s+");
+                path = lineSplit[0];
+                if(lineSplit.length == 4){
+                    if(lineSplit[lineSplit.length-1].equals("c")){
+                        Files f = root.findFile(path);
+                        int start = Integer.parseInt(lineSplit[1]),end = start+Integer.parseInt(lineSplit[2]),it = start;
+                        int[] allocatedBlocks = new int [end-start];
+                        for (int i = 0; i < end-start; i++) {
+                            this.blockState.set(it,1);
+                            allocatedBlocks[i]=it++;
+                        }
+                        f.setStartIndx(start);
+                        f.setAllocationAlgorithm('c');
+                        f.setAllocatedBlocks(allocatedBlocks);
+                    }else if(lineSplit[lineSplit.length-1].equals("l")){
+                        Files f = root.findFile(path);
+                        int start = Integer.parseInt(lineSplit[1]),end = Integer.parseInt(lineSplit[2]),it = start;
+                        ArrayList<Integer>all=new ArrayList<>();
+                        while(true){
+                            line=buffer.readLine();
+                            lineSplit=line.split("\\s+");
+                            if(Integer.parseInt(lineSplit[0])==end) break;
+                            all.add(Integer.parseInt(lineSplit[0]));
+                        }
+                        all.add(end);
+                        int[] allocatedBlocks = new int [all.size()];
+                        for(int i = 0 ; i < all.size();i++){
+                            allocatedBlocks[i]=all.get(i);
+                            blockState.set(all.get(i),1);
+                        }
+                        f.setStartIndx(start);
+                        f.setAllocationAlgorithm('l');
+                        f.setAllocatedBlocks(allocatedBlocks);
+                    }
+                }else if(lineSplit.length == 3){
+                    if(lineSplit[lineSplit.length-1].equals("i")){
+                        Files f = root.findFile(path);
+                        int start = Integer.parseInt(lineSplit[1]);
+                        ArrayList<Integer>all=new ArrayList<>();
+                        f.setStartIndx(start);
+                        line=buffer.readLine();
+                        lineSplit = line.split("\\s+");
+                        blockState.set(start,1);
+                        for(int i = 1 ; i < lineSplit.length;++i){
+                            blockState.set(Integer.parseInt(lineSplit[i]),1);
+                            all.add(Integer.parseInt(lineSplit[i]));
+                        }
+                        int[] allocatedBlocks = new int [all.size()];
+                        for(int i = 0 ; i < all.size();i++){
+                            allocatedBlocks[i]=all.get(i);
+                            blockState.set(all.get(i),1);
+                        }
+                        f.setStartIndx(start);
+                        f.setAllocationAlgorithm('i');
+                        f.setAllocatedBlocks(allocatedBlocks);
+                    }
+                }
+            }
         }
     }
 
@@ -197,15 +258,15 @@ public class DiskStructureManger {
     public Boolean DisplayDiskStatus() {
         int spaceFilled = this.calculateSpace();
         int freeSpace = blockState.size() - spaceFilled;
-        System.out.println("1- Empty Space: " + freeSpace);
-        System.out.println("2- Allocated  Space: " + spaceFilled);
+        System.out.println("1- Empty Space: " + freeSpace+"KB");
+        System.out.println("2- Allocated  Space: " + spaceFilled+"KB");
         System.out.print("3- Empty Blocks in the Disk: ");
         for (int i = 0; i < blockState.size(); i++) {
             if (blockState.get(i) == 0) {
                 System.out.print(i + " ");
             }
         }
-        System.out.println("\n4- Allocated  Blocks in the Disk: ");
+        System.out.print("\n4- Allocated  Blocks in the Disk: ");
         for (int i = 0; i < blockState.size(); i++) {
             if (blockState.get(i) == 1) {
                 System.out.print(i + " ");
@@ -319,5 +380,25 @@ public class DiskStructureManger {
             if (blockState.get(i) == 1) spaceCount++;
         }
         return spaceCount;
+    }
+
+    public boolean exit() throws IOException {
+        //this.fileSystem.delete();
+        File fileSystem2 = new File("VFS.vfs");
+        PrintStream stream = new PrintStream(fileSystem2);
+        PrintStream stdout = System.out;
+        System.setOut(stream);
+        for(Integer state:blockState){
+            System.out.print(String.valueOf(state));
+        }
+        System.out.println();
+        this.current = root;
+        root.printDirectoryStructure();
+        System.out.println("");
+        root.printFiles();
+        System.out.println("");
+        System.setOut(stdout);
+
+        return true;
     }
 }

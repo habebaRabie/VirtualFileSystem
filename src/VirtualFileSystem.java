@@ -30,7 +30,7 @@ public class VirtualFileSystem {
 
             if (methodChoice == 1) { //Best Fit allocation
                 all = new ContiguousAllocation();
-                fw = new FileWriter("VFS.txt", true);
+                fw = new FileWriter("VFS.vfs", true);
                 BufferedWriter bw = new BufferedWriter(fw);
                 commandIn = commandName.nextLine();
                 String[] commandSplited = commandIn.split("\\s+");
@@ -62,7 +62,7 @@ public class VirtualFileSystem {
             } else if (methodChoice == 2) {
                 //Indexed Allocation
                 all = new IndexedAllocation();
-                fw = new FileWriter("VFS.txt", true);
+                fw = new FileWriter("VFS.vfs", true);
                 BufferedWriter bw = new BufferedWriter(fw);
                 commandIn = commandName.nextLine();
                 String[] commandSplited = commandIn.split("\\s+");
@@ -90,7 +90,7 @@ public class VirtualFileSystem {
             } else if (methodChoice == 3) {
                 //Linked Allocation
                 all = new linkedAllocation();
-                fw = new FileWriter("VFS.txt", true);
+                fw = new FileWriter("VFS.vfs", true);
                 BufferedWriter bw = new BufferedWriter(fw);
                 commandIn = commandName.nextLine();
                 String[] commandSplited = commandIn.split("\\s+");
@@ -116,6 +116,7 @@ public class VirtualFileSystem {
                     System.out.println("Wrong comand");
                 }
             } else if (methodChoice == 4) {
+                dsm.exit();
                 break;
             } else {
                 System.out.println("Wrong choice!");

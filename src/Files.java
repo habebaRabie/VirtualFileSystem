@@ -3,6 +3,7 @@ public class Files {
     private Directory parent;
     private String path;
     private int[] allocatedBlocks;
+    private int startIndx;
     private boolean deleted;
     private char allocationAlgorithm;
     public String getFileName() {
@@ -49,5 +50,12 @@ public class Files {
 
     public char getAllocationAlgorithm(){
         return allocationAlgorithm;
+    }
+    public void setStartIndx(int indx){
+        startIndx = indx;
+    }
+
+    public int getStartIndx() {
+        return startIndx;
     }
 }
