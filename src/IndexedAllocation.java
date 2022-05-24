@@ -18,13 +18,17 @@ public class IndexedAllocation implements Allocation {
                     break;
                 }
                 if(j+1>=sub.size()){
+                    System.out.println("Directory Not Found");
                     return false;
                 }
             }
         }
         file = current.getFiles();
         for(Files f: file){
-            if(f.getFileName().equals(path[path.length-1]))return false;
+            if(f.getFileName().equals(path[path.length-1])){
+                System.out.println("File Already Exists");
+                return false;
+            }
         }
         // 4 --> 4 blocks number array block save
         int numberOfBlocks =0 , pointersIndex = 0;
@@ -40,9 +44,11 @@ public class IndexedAllocation implements Allocation {
                 pointersIndex = pointers.get(pointers.size()-1);
                 pointers.remove(pointers.size()-1);
                 foundBlocks = true;
-            }
+                break;
+            } else if (blockState.get(i) == 1) numberOfBlocks = 0;
         }
         if(!foundBlocks){
+            System.out.println("No indexed Blocks Found To Allocate");
             return false;
         }
         Files newFile = new Files();

@@ -40,13 +40,17 @@ public class linkedAllocation implements Allocation{
                     break;
                 }
                 if(j+1>=sub.size()){
+                    System.out.println("Directory Not Found");
                     return false;
                 }
             }
         }
         file = current.getFiles();
         for(Files f: file){
-            if(f.getFileName().equals(path[path.length-1]))return false;
+            if(f.getFileName().equals(path[path.length-1])){
+                System.out.println("File Already Exists");
+                return false;
+            }
         }
         int numberOfBlocks =0 , start = 0, end = 0;
         ArrayList<Integer> pointers = new ArrayList<>();
@@ -66,6 +70,7 @@ public class linkedAllocation implements Allocation{
             }
         }
         if(!foundBlocks){
+            System.out.println("No Linked Blocks Found To Allocate");
             return false;
         }
         Files newFile = new Files();
