@@ -49,7 +49,7 @@ public class VirtualFileSystem {
         int userNum = -1; //our user
         Allocation all;
         String[] s = {"root", "Folder1", "file3"};
-
+        dsm.getRoot().addUserTo("root/folder3/folder4","ahmed","10");
         System.out.println("Please login to the system");
         String Info;
 //            System.out.println("Please enter username :");

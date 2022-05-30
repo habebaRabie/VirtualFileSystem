@@ -185,4 +185,18 @@ public class Directory {
             }
         }
     }
+
+    public void addUserTo(String path,String user, String cap){
+        if (this.getDirectoryPath().equals(path)) {
+            this.addUser(user);
+            this.addCapabilities(cap);
+            if (this.getSubDirectories().size()==0) return;
+        } else {
+            if (this.getSubDirectories().size()==0) return;
+            for (Directory d : this.getSubDirectories()) {
+                d.addUserTo(path, user, cap);
+            }
+        }
+    }
+
 }
