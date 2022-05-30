@@ -7,6 +7,9 @@ public class Directory {
     private String directoryPath;
     private ArrayList<Files> files = new ArrayList<>();
     private ArrayList<Directory> subDirectories = new ArrayList<>();
+    private ArrayList<String> users = new ArrayList<>();
+    private ArrayList<String> capabilities = new ArrayList<>();
+
     private boolean deleted;
 
     public void setName(String name) {
@@ -55,6 +58,30 @@ public class Directory {
 
     public void setSubDirectories(ArrayList<Directory> subDirectories) {
         this.subDirectories = subDirectories;
+    }
+
+    public void setUsers(ArrayList<String> u) {
+        this.users = u;
+    }
+
+    public void setCapabilities(ArrayList<String> c) {
+        this.capabilities = c;
+    }
+
+    public void addUser(String u) {
+        this.users.add(u);
+    }
+
+    public void addCapabilities(String c) {
+        this.capabilities.add(c);
+    }
+
+    public ArrayList<String> getUsers() {
+        return users;
+    }
+
+    public ArrayList<String> getCapabilities() {
+        return capabilities;
     }
 
     public boolean isDeleted() {
@@ -143,4 +170,19 @@ public class Directory {
         return false;
     }
 
+    public void setAllUsers(String path, ArrayList<String> users, ArrayList<String> cap) {
+        if (this.getDirectoryPath().equals(path)) {
+            this.setUsers(users);
+            this.setCapabilities(cap);
+            if (this.getSubDirectories().size()==0) return;
+                for (Directory d : this.getSubDirectories()) {
+                    d.setAllUsers(path + "/" + d.getName(), users, cap);
+                }
+        } else {
+            if (this.getSubDirectories().size()==0) return;
+            for (Directory d : this.getSubDirectories()) {
+                d.setAllUsers(path, users, cap);
+            }
+        }
+    }
 }

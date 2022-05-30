@@ -31,7 +31,9 @@ public class DiskStructureManger {
             fw.close();
         } else {
             FileReader file = new FileReader("VFS.vfs");
+            FileReader fileCap = new FileReader("capabilities.txt");
             BufferedReader buffer = new BufferedReader(file);
+            BufferedReader buffer2 = new BufferedReader(fileCap);
             String line = buffer.readLine(), currentDircName = "";
             String path = "";
             ArrayList<Directory> subDirec = new ArrayList<>();
@@ -112,6 +114,22 @@ public class DiskStructureManger {
             }
             this.root = currentDirectory;
             String[] lineSplit;
+            while (true){
+                line = buffer2.readLine();
+                if(line.equals("")) break;
+                lineSplit = line.split(" ");
+                String p = lineSplit[0];
+                ArrayList<String> users = new ArrayList<>();
+                ArrayList<String> cap = new ArrayList<>();
+                for(int i = 1 ; i < lineSplit.length ; ++i){
+                    if(i%2!=0){
+                        users.add(lineSplit[i]);
+                    }else{
+                        cap.add(lineSplit[i]);
+                    }
+                }
+                this.root.setAllUsers(p,users,cap);
+            }
             while (true) {
                 line = buffer.readLine();
                 if (line.equals("")) break;
