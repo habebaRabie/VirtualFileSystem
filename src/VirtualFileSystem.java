@@ -29,6 +29,34 @@ public class VirtualFileSystem {
         writer.close();
     }
 
+    public static void writeCapabilities(String userCap) throws FileNotFoundException {
+        String[] UserCapabil = userCap.split("\\s+");
+        File myObj = new File("capabilities.txt");
+        Scanner myReader = new Scanner(myObj);
+        String d = "";
+        String data;
+        String[] data2;
+        boolean flag = false;
+        while (myReader.hasNextLine()) {
+
+            data = myReader.nextLine();
+            data2 = data.split("\\s");
+            if(data2[0].equals(UserCapabil[2])){
+                data +=" "+ UserCapabil[1]+ " " +UserCapabil[3] ;
+                flag = true;
+            }
+            data+="\n";
+            d+=data;
+        }
+        if(!flag){
+            d+=UserCapabil[2] +" "+UserCapabil[1]+ " " +UserCapabil[3]+"\n";
+        }
+
+        PrintWriter writer = new PrintWriter(new File("capabilities.txt"));
+        writer.print(d);
+        writer.close();
+    }
+
     //    static int blocksNum = 0;
 //    static int blockSize = 1;
 //    static boolean fileExist = true;
@@ -52,17 +80,38 @@ public class VirtualFileSystem {
         Scanner userInfo = new Scanner(System.in);
         Scanner createOrNot = new Scanner(System.in);
         DiskStructureManger dsm = new DiskStructureManger();
-        int userNum = - 1; //our user
+        int userNum = -1; //our user
         Allocation all;
+        String[] UserInfo;
+        String Info;
 //        String[] s = {"root", "Folder1", "file3"};
 //        dsm.getRoot().addUserTo("root/folder3/folder4","ahmed","10");
-        System.out.println("Please login to the system");
-        String Info;
+        while (true){   System.out.println("Please login to the system");
 //            System.out.println("Please enter username :");
 //            userName = userInfo.nextLine();
 //            System.out.println("Please enter Password :");
-        Info = userInfo.nextLine();
-        String[] UserInfo = Info.split("\\s+");
+            Info = userInfo.nextLine();
+            UserInfo = Info.split("\\s+");
+            boolean flag = false;
+            if (UserInfo[0].equals("Login")) {
+                flag = false;
+                boolean userExist = false;
+                for (int i = 0; i < allUsers.size(); i++) {
+                    if (allUsers.get(i).getName().equals(UserInfo[1]) && allUsers.get(i).getPassword().equals(UserInfo[2])) {
+                        userNum = i;
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag) {
+                    break;
+                } else {
+                    System.out.println("Wrong UserName or Password");
+                }
+            }
+        }
+
+
         while (true) {
 
             System.out.println("1 - Contiguous Allocation");
@@ -356,61 +405,51 @@ public class VirtualFileSystem {
                 }
             } else if (methodChoice == 4) {
                 System.out.println("Username " + allUsers.get(userNum).getName());
-            } else if (methodChoice == 5) {
-                if (UserInfo[0].equals("Login")) {
-                    boolean flag = false;
-                    boolean userExist = false;
-                    for (int i = 0; i < allUsers.size(); i++) {
-                        if (allUsers.get(i).getName().equals(UserInfo[1]) && allUsers.get(i).getPassword().equals(UserInfo[2])) {
-                            userNum = i;
-                            flag = true;
-                            break;
-                        }
-                    }
-                    if (flag) {
-                        if (allUsers.get(userNum).getName().equals("admin")) {
-                            System.out.println("You want to create new user(y/n)");
-                            if (createOrNot.nextLine().equals("y")) {
-                                Info = userInfo.nextLine();
-                                UserInfo = Info.split("\\s+");
-                                if (UserInfo[0].equals("CUser")) {
-                                    for (int i = 0; i < allUsers.size(); i++) {
-                                        if (allUsers.get(i).getName().equals(UserInfo[1])) {
-                                            System.out.println("Username already exist!");
-                                            userExist = true;
-                                            break;
-                                        }
-                                    }
-                                    if (! userExist) {
-                                        User user = new User(UserInfo[1], UserInfo[2]);
-                                        allUsers.add(user);
-                                        writeUsers();
-                                        System.out.println("Please enter the user access");
-                                        Info = userInfo.nextLine();
-                                        UserInfo = Info.split("\\s+");
-                                        if (UserInfo[0].equals("Grant")) {
-                                            //TODO
-                                        }
+            }
 
-                                    } else {
-                                        break;
-                                    }
+
+
+
+            else if (methodChoice == 5) {
+                boolean userExist = false;
+
+                if (allUsers.get(userNum).getName().equals("admin")) {
+                    System.out.println("You want to create new user(y/n)");
+                    if (createOrNot.nextLine().equals("y")) {
+                        Info = userInfo.nextLine();
+                        UserInfo = Info.split("\\s+");
+                        if (UserInfo[0].equals("CUser")) {
+                            for (int i = 0; i < allUsers.size(); i++) {
+                                if (allUsers.get(i).getName().equals(UserInfo[1])) {
+                                    System.out.println("Username already exist!");
+                                    userExist = true;
+                                    break;
+                                }
+                            }
+                            if (!userExist) {
+                                User user = new User(UserInfo[1], UserInfo[2]);
+                                allUsers.add(user);
+                                writeUsers();
+                                System.out.println("Please enter the user access");
+                                Info = userInfo.nextLine();
+                                String[] UserCapabil = Info.split("\\s+");
+                                if (UserCapabil[0].equals("Grant")) {
+                                    //TODO
+                                    writeCapabilities(Info);
                                 }
 
-                            } else {
-                                System.out.println("You can't create a user");
                             }
+                        }else {
+                            System.out.println("Wrong command");
                         }
                     } else {
-                        System.out.println("Wrong UserName or Password");
-                        break;
+                        System.out.println("You can't create a user");
                     }
                 } else {
-                    System.out.println("Wrong command");
-                    break;
+                    System.out.println("Sorry You are not admin so you can not do admin commands");
                 }
-                break;
-            } else if (methodChoice == 6) {
+            }
+            else if (methodChoice == 6) {
                 dsm.exit();
                 break;
             } else {
@@ -421,4 +460,3 @@ public class VirtualFileSystem {
 
     }
 }
-

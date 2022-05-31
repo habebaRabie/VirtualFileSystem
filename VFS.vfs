@@ -5,6 +5,7 @@
 	file3
 	<Folder1>
 		file4
+		file
 		<folder2>
 	<folder3>
 		adsasdasd
@@ -26,6 +27,7 @@ root/file2 12 20 l
 root/file3 7 i
 7 20 25 26 29 
 root/Folder1/file4 6 1 c
+root/Folder1/file 0 1 c
 root/folder3/adsasdasd 7 1 c
 root/folder3/folder4/file5 8 1 c
 root/folder3/folder4/folder5/adsasdasd 9 1 c
