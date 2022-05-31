@@ -174,53 +174,93 @@ public class Directory {
         if (this.getDirectoryPath().equals(path)) {
             this.setUsers(users);
             this.setCapabilities(cap);
-            if (this.getSubDirectories().size()==0) return;
-                for (Directory d : this.getSubDirectories()) {
-                    d.setAllUsers(path + "/" + d.getName(), users, cap);
-                }
+            if (this.getSubDirectories().size() == 0) return;
+            for (Directory d : this.getSubDirectories()) {
+                d.setAllUsers(path + "/" + d.getName(), users, cap);
+            }
         } else {
-            if (this.getSubDirectories().size()==0) return;
+            if (this.getSubDirectories().size() == 0) return;
             for (Directory d : this.getSubDirectories()) {
                 d.setAllUsers(path, users, cap);
             }
         }
     }
 
-    public void addUserTo(String path,String user, String cap){
+    public void addUserTo(String path, String user, String cap) {
         if (this.getDirectoryPath().equals(path)) {
-            if(!this.getUsers().contains(user)){
+            if (! this.getUsers().contains(user)) {
                 this.addUser(user);
                 this.addCapabilities(cap);
-            }else{
-                this.getUsers().set(this.getUsers().indexOf(user),user);
-                this.getCapabilities().set(this.getUsers().indexOf(user),cap);
+            } else {
+                this.getUsers().set(this.getUsers().indexOf(user), user);
+                this.getCapabilities().set(this.getUsers().indexOf(user), cap);
             }
-            if (this.getSubDirectories().size()==0) return;
+            if (this.getSubDirectories().size() == 0) return;
         } else {
-            if (this.getSubDirectories().size()==0) return;
+            if (this.getSubDirectories().size() == 0) return;
             for (Directory d : this.getSubDirectories()) {
                 d.addUserTo(path, user, cap);
             }
         }
     }
 
-    public boolean searchPath(String path){
+    public boolean searchPath(String path) {
         String[] pathSplit = path.split("/");
         Directory current = this;
         ArrayList<Directory> d = new ArrayList<>();
         boolean found = false;
-        for (int i = 1 ; i < pathSplit.length ; ++i){
-            d=current.getSubDirectories();
-            for(Directory ds : d){
-                if(ds.getName().equals(pathSplit[i])) {
+        for (int i = 1; i < pathSplit.length; ++ i) {
+            d = current.getSubDirectories();
+            for (Directory ds : d) {
+                if (ds.getName().equals(pathSplit[i])) {
                     found = true;
                     current = ds;
                     break;
                 }
             }
-            if(!found) return false;
+            if (! found) return false;
             found = false;
         }
         return true;
+    }
+
+    public Directory getDirectory(String path) {
+        String[] pathSplit = path.split("/");
+        Directory current = this;
+        ArrayList<Directory> d = new ArrayList<>();
+        boolean found = false;
+        for (int i = 1; i < pathSplit.length; ++ i) {
+            d = current.getSubDirectories();
+            for (Directory ds : d) {
+                if (ds.getName().equals(pathSplit[i])) {
+                    found = true;
+                    current = ds;
+                    break;
+                }
+            }
+            if (! found) return null;
+            found = false;
+        }
+        return current;
+    }
+
+    public Directory getDirectoryParent(String path) {
+        String[] pathSplit = path.split("/");
+        Directory current = this;
+        ArrayList<Directory> d = new ArrayList<>();
+        boolean found = false;
+        for (int i = 1; i < pathSplit.length-1; ++ i) {
+            d = current.getSubDirectories();
+            for (Directory ds : d) {
+                if (ds.getName().equals(pathSplit[i])) {
+                    found = true;
+                    current = ds;
+                    break;
+                }
+            }
+            if (! found) return null;
+            found = false;
+        }
+        return current;
     }
 }

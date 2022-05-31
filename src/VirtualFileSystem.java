@@ -82,16 +82,72 @@ public class VirtualFileSystem {
                 String[] directory;
                 if (commandSplited[0].equals("CreateFile")) {
                     directory = commandSplited[1].split("/");
-                    all.createFile(dsm, directory, Integer.parseInt(commandSplited[2]));
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
+                    boolean allowed = false;
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0 && tempDirc.getUsers().contains(UserInfo[1])) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("10") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        all.createFile(dsm, directory, Integer.parseInt(commandSplited[2]));
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("DeleteFile")) { //
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
                     directory = commandSplited[1].split("/");
-                    dsm.deleteFile(directory, all);
+                    boolean allowed = false;
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("01") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        dsm.deleteFile(directory, all);
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("CreateFolder")) { //
-                    directory = commandSplited[1].split("/");
-                    dsm.creatDirectory(directory);
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
+                    boolean allowed = false;
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0 && tempDirc.getUsers().contains(UserInfo[1])) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("10") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        directory = commandSplited[1].split("/");
+                        dsm.creatDirectory(directory);
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("DeleteFolder")) { //
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
+                    boolean allowed = false;
                     directory = commandSplited[1].split("/");
-                    dsm.deleteDirectory(directory);
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0 && tempDirc.getUsers().contains(UserInfo[1])) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("01") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        dsm.deleteDirectory(directory);
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("DisplayDiskStructure")) {
                     dsm.getRoot().printDirectoryStructure();
 
@@ -119,16 +175,73 @@ public class VirtualFileSystem {
                 String[] directory;
                 if (commandSplited[0].equals("CreateFile")) {
                     directory = commandSplited[1].split("/");
-                    all.createFile(dsm, directory, Integer.parseInt(commandSplited[2]));
+                    directory = commandSplited[1].split("/");
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
+                    boolean allowed = false;
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0 && tempDirc.getUsers().contains(UserInfo[1])) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("10") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        all.createFile(dsm, directory, Integer.parseInt(commandSplited[2]));
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("DeleteFile")) { //
                     directory = commandSplited[1].split("/");
-                    dsm.deleteFile(directory, all);
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
+                    boolean allowed = false;
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("01") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        dsm.deleteFile(directory, all);
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("CreateFolder")) { //
-                    directory = commandSplited[1].split("/");
-                    dsm.creatDirectory(directory);
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
+                    boolean allowed = false;
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0 && tempDirc.getUsers().contains(UserInfo[1])) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("10") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        directory = commandSplited[1].split("/");
+                        dsm.creatDirectory(directory);
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("DeleteFolder")) { //
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
+                    boolean allowed = false;
                     directory = commandSplited[1].split("/");
-                    dsm.deleteDirectory(directory);
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0 && tempDirc.getUsers().contains(UserInfo[1])) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("01") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        dsm.deleteDirectory(directory);
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("DisplayDiskStructure")) {
                     dsm.getRoot().printDirectoryStructure();
 
@@ -157,16 +270,72 @@ public class VirtualFileSystem {
                 String[] directory;
                 if (commandSplited[0].equals("CreateFile")) {
                     directory = commandSplited[1].split("/");
-                    all.createFile(dsm, directory, Integer.parseInt(commandSplited[2]));
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
+                    boolean allowed = false;
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0 && tempDirc.getUsers().contains(UserInfo[1])) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("10") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        all.createFile(dsm, directory, Integer.parseInt(commandSplited[2]));
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("DeleteFile")) { //
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
                     directory = commandSplited[1].split("/");
-                    dsm.deleteFile(directory, all);
+                    boolean allowed = false;
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("01") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        dsm.deleteFile(directory, all);
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("CreateFolder")) { //
-                    directory = commandSplited[1].split("/");
-                    dsm.creatDirectory(directory);
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
+                    boolean allowed = false;
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0 && tempDirc.getUsers().contains(UserInfo[1])) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("10") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        directory = commandSplited[1].split("/");
+                        dsm.creatDirectory(directory);
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("DeleteFolder")) { //
+                    Directory tempDirc = dsm.getRoot().getDirectoryParent(commandSplited[1]);
+                    ArrayList<String> cap = tempDirc.getCapabilities();
+                    boolean allowed = false;
                     directory = commandSplited[1].split("/");
-                    dsm.deleteDirectory(directory);
+                    if (UserInfo[1].equals("admin")) {
+                        allowed = true;
+                    } else if (cap.size() > 0 && tempDirc.getUsers().contains(UserInfo[1])) {
+                        if (cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("01") || cap.get(tempDirc.getUsers().indexOf(UserInfo[1])).equals("11")) {
+                            allowed = true;
+                        }
+                    }
+                    if (allowed) {
+                        dsm.deleteDirectory(directory);
+                    } else {
+                        System.out.println("You Don't Have Permission");
+                    }
                 } else if (commandSplited[0].equals("DisplayDiskStructure")) {
                     dsm.getRoot().printDirectoryStructure();
 
