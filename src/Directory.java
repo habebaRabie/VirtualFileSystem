@@ -188,8 +188,13 @@ public class Directory {
 
     public void addUserTo(String path,String user, String cap){
         if (this.getDirectoryPath().equals(path)) {
-            this.addUser(user);
-            this.addCapabilities(cap);
+            if(!this.getUsers().contains(user)){
+                this.addUser(user);
+                this.addCapabilities(cap);
+            }else{
+                this.getUsers().set(this.getUsers().indexOf(user),user);
+                this.getCapabilities().set(this.getUsers().indexOf(user),cap);
+            }
             if (this.getSubDirectories().size()==0) return;
         } else {
             if (this.getSubDirectories().size()==0) return;
@@ -199,4 +204,23 @@ public class Directory {
         }
     }
 
+    public boolean searchPath(String path){
+        String[] pathSplit = path.split("/");
+        Directory current = this;
+        ArrayList<Directory> d = new ArrayList<>();
+        boolean found = false;
+        for (int i = 1 ; i < pathSplit.length ; ++i){
+            d=current.getSubDirectories();
+            for(Directory ds : d){
+                if(ds.getName().equals(pathSplit[i])) {
+                    found = true;
+                    current = ds;
+                    break;
+                }
+            }
+            if(!found) return false;
+            found = false;
+        }
+        return true;
+    }
 }

@@ -36,6 +36,12 @@ public class VirtualFileSystem {
     //    static Directory root = new Directory();
     static ArrayList<Integer> blockState = new ArrayList<>();
 
+    public static boolean userSearch(String name) {
+        for (User u : allUsers) {
+            if (u.getName().equals(name)) return true;
+        }
+        return false;
+    }
 
     public static void main(String[] args) throws IOException {
         readUsers();
@@ -44,12 +50,12 @@ public class VirtualFileSystem {
         Scanner input = new Scanner(System.in);
         Scanner commandName = new Scanner(System.in);
         Scanner userInfo = new Scanner(System.in);
-        Scanner createOrNot =  new Scanner(System.in);
+        Scanner createOrNot = new Scanner(System.in);
         DiskStructureManger dsm = new DiskStructureManger();
-        int userNum = -1; //our user
+        int userNum = - 1; //our user
         Allocation all;
-        String[] s = {"root", "Folder1", "file3"};
-        dsm.getRoot().addUserTo("root/folder3/folder4","ahmed","10");
+//        String[] s = {"root", "Folder1", "file3"};
+//        dsm.getRoot().addUserTo("root/folder3/folder4","ahmed","10");
         System.out.println("Please login to the system");
         String Info;
 //            System.out.println("Please enter username :");
@@ -58,63 +64,13 @@ public class VirtualFileSystem {
         Info = userInfo.nextLine();
         String[] UserInfo = Info.split("\\s+");
         while (true) {
-            if (UserInfo[0].equals("Login")){
-                boolean flag = false;
-                boolean userExist = false;
-                for(int i=0; i<allUsers.size(); i++){
-                    if(allUsers.get(i).getName().equals(UserInfo[1]) &&allUsers.get(i).getPassword().equals(UserInfo[2])){
-                        userNum = i;
-                        flag = true;
-                        break;
-                    }
-                }
-                if(flag){
-                    if(allUsers.get(userNum).getName().equals("admin")){
-                        System.out.println("You want to create new user(y/n)");
-                        if(createOrNot.nextLine().equals("y")){
-                            Info = userInfo.nextLine();
-                            UserInfo = Info.split("\\s+");
-                            if (UserInfo[0].equals("CUser")){
-                                for(int i=0; i<allUsers.size(); i++){
-                                    if(allUsers.get(i).getName().equals(UserInfo[1])){
-                                        System.out.println("Username already exist!");
-                                        userExist = true;
-                                        break;
-                                    }
-                                }
-                                if(!userExist){
-                                    User user = new User(UserInfo[1], UserInfo[2]);
-                                    allUsers.add(user);
-                                    writeUsers();
-                                    System.out.println("Please enter the user access");
-                                    Info = userInfo.nextLine();
-                                    UserInfo = Info.split("\\s+");
-                                    if (UserInfo[0].equals("Grant")){
-                                        //TODO
-                                    }
 
-                                }else{
-                                    break;
-                                }
-                            }
-
-                        }else {
-                            System.out.println("You can't create a user");
-                        }
-                    }
-                }else{
-                    System.out.println("Wrong UserName or Password");
-                    break;
-                }
-            }else{
-                System.out.println("Wrong command");
-                break;
-            }
             System.out.println("1 - Contiguous Allocation");
             System.out.println("2 - Indexed Allocation");
             System.out.println("3 - Linked Allocation");
             System.out.println("4 - Your user information");
-            System.out.println("5 - Exit");
+            System.out.println("5 - Admin Commands");
+            System.out.println("6 - Exit");
             methodChoice = input.nextInt();
 
             if (methodChoice == 1) { //Best Fit allocation
@@ -141,6 +97,16 @@ public class VirtualFileSystem {
 
                 } else if (commandSplited[0].equals("DisplayDiskStatus")) {
                     dsm.DisplayDiskStatus();
+                } else if (commandSplited[0].equals("Grant")) {
+                    if (UserInfo[1].equals("admin")) {
+                        if (userSearch(commandSplited[1])) {
+                            if (dsm.getRoot().searchPath(commandSplited[2]))
+                                dsm.getRoot().addUserTo(commandSplited[2], commandSplited[1], commandSplited[3]);
+                            else System.out.println("Path Not Found");
+                        } else {
+                            System.out.println("User Not Found");
+                        }
+                    } else System.out.println("You Are Not Authorized");
                 }
 
             } else if (methodChoice == 2) {
@@ -168,6 +134,16 @@ public class VirtualFileSystem {
 
                 } else if (commandSplited[0].equals("DisplayDiskStatus")) {
                     dsm.DisplayDiskStatus();
+                } else if (commandSplited[0].equals("Grant")) {
+                    if (UserInfo[1].equals("admin")) {
+                        if (userSearch(commandSplited[1])) {
+                            if (dsm.getRoot().searchPath(commandSplited[2]))
+                                dsm.getRoot().addUserTo(commandSplited[2], commandSplited[1], commandSplited[3]);
+                            else System.out.println("Path Not Found");
+                        } else {
+                            System.out.println("User Not Found");
+                        }
+                    } else System.out.println("You Are Not Authorized");
                 } else {
                     System.out.println("Wrong comand");
                 }
@@ -196,15 +172,79 @@ public class VirtualFileSystem {
 
                 } else if (commandSplited[0].equals("DisplayDiskStatus")) {
                     dsm.DisplayDiskStatus();
+                } else if (commandSplited[0].equals("Grant")) {
+                    if (UserInfo[1].equals("admin")) {
+                        if (userSearch(commandSplited[1])) {
+                            if (dsm.getRoot().searchPath(commandSplited[2]))
+                                dsm.getRoot().addUserTo(commandSplited[2], commandSplited[1], commandSplited[3]);
+                            else System.out.println("Path Not Found");
+                        } else {
+                            System.out.println("User Not Found");
+                        }
+                    } else System.out.println("You Are Not Authorized");
                 } else {
                     System.out.println("Wrong command");
                 }
             } else if (methodChoice == 4) {
-                System.out.println("Username "+ allUsers.get(userNum).getName());
-            }else if(methodChoice == 5){
+                System.out.println("Username " + allUsers.get(userNum).getName());
+            } else if (methodChoice == 5) {
+                if (UserInfo[0].equals("Login")) {
+                    boolean flag = false;
+                    boolean userExist = false;
+                    for (int i = 0; i < allUsers.size(); i++) {
+                        if (allUsers.get(i).getName().equals(UserInfo[1]) && allUsers.get(i).getPassword().equals(UserInfo[2])) {
+                            userNum = i;
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (flag) {
+                        if (allUsers.get(userNum).getName().equals("admin")) {
+                            System.out.println("You want to create new user(y/n)");
+                            if (createOrNot.nextLine().equals("y")) {
+                                Info = userInfo.nextLine();
+                                UserInfo = Info.split("\\s+");
+                                if (UserInfo[0].equals("CUser")) {
+                                    for (int i = 0; i < allUsers.size(); i++) {
+                                        if (allUsers.get(i).getName().equals(UserInfo[1])) {
+                                            System.out.println("Username already exist!");
+                                            userExist = true;
+                                            break;
+                                        }
+                                    }
+                                    if (! userExist) {
+                                        User user = new User(UserInfo[1], UserInfo[2]);
+                                        allUsers.add(user);
+                                        writeUsers();
+                                        System.out.println("Please enter the user access");
+                                        Info = userInfo.nextLine();
+                                        UserInfo = Info.split("\\s+");
+                                        if (UserInfo[0].equals("Grant")) {
+                                            //TODO
+                                        }
+
+                                    } else {
+                                        break;
+                                    }
+                                }
+
+                            } else {
+                                System.out.println("You can't create a user");
+                            }
+                        }
+                    } else {
+                        System.out.println("Wrong UserName or Password");
+                        break;
+                    }
+                } else {
+                    System.out.println("Wrong command");
+                    break;
+                }
+                break;
+            } else if (methodChoice == 6) {
                 dsm.exit();
                 break;
-            }else {
+            } else {
                 System.out.println("Wrong choice!");
             }
 
