@@ -116,7 +116,7 @@ public class DiskStructureManger {
             String[] lineSplit;
             while (true){
                 line = buffer2.readLine();
-                if(line.equals("")) break;
+                if(line==null) break;
                 lineSplit = line.split(" ");
                 String p = lineSplit[0];
                 ArrayList<String> users = new ArrayList<>();
